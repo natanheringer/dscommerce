@@ -3,13 +3,17 @@ package com.devsuperior.dscommerce.entities;
 import java.time.Instant;
 import java.util.Objects;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -24,51 +28,30 @@ public class Order {
 		@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
 		private Instant moment;
 		
+		@Enumerated(EnumType.STRING)
 		private OrderStatus status;
 		
 		@ManyToOne
 		@JoinColumn(name = "client_id")
 		private User client;
-
 		
-		/*
-		 * Constructor using fields
-		 */
-		public Order(Long id, Instant moment, OrderStatus status, User client) {
+		
+
+		@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+		private Payment payment;
+		
+		public Order() {
+			
+		}
+
+		public Order(Long id, Instant moment, OrderStatus status, User client, Payment payment) {
 			this.id = id;
 			this.moment = moment;
 			this.status = status;
 			this.client = client;
-			
-		}
-		
-		
-		
-		@Override
-		public int hashCode() {
-			return Objects.hash(id, client, moment, status);
+			this.payment = payment;
 		}
 
-
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			Order other = (Order) obj;
-			return Objects.equals(client, other.client) && Objects.equals(id, other.id)
-					&& Objects.equals(moment, other.moment) && status == other.status;
-		}
-
-
-
-		/* 
-		 * Getters and Setters 
-		 */
 		public Long getId() {
 			return id;
 		}
@@ -100,10 +83,14 @@ public class Order {
 		public void setClient(User client) {
 			this.client = client;
 		}
-		
-		
-		
-		
+
+		public Payment getPayment() {
+			return payment;
+		}
+
+		public void setPayment(Payment payment) {
+			this.payment = payment;
+		}	
 		
 		
 }
