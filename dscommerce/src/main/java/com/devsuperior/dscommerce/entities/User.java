@@ -1,12 +1,16 @@
 package com.devsuperior.dscommerce.entities;
 
+
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,6 +30,12 @@ public class User {
 		
 		
 		public User() {}
+		
+		/*
+		 * client can have many lists = one to many 
+		 */
+		@OneToMany(mappedBy = "client")
+		private List<Order> order = new ArrayList<>();
 
 
 		public User(Long id, String name, String email, String phone, LocalDate birthDate, String password) {
@@ -102,24 +112,23 @@ public class User {
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(birthDate, email, id, name, password, phone);
+			return Objects.hash(id, name, birthDate, phone, password);
 		}
 
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			User other = (User) obj;
-			return Objects.equals(birthDate, other.birthDate) && Objects.equals(email, other.email)
-					&& Objects.equals(id, other.id) && Objects.equals(name, other.name)
-					&& Objects.equals(password, other.password) && Objects.equals(phone, other.phone);
-		}
 		
+		
+		
+
+		public List<Order> getOrder() {
+			return order;
+		}
+
+
+		public void setOrder(List<Order> order) {
+			this.order = order;
+		}
+
+
 		
 		
 		
