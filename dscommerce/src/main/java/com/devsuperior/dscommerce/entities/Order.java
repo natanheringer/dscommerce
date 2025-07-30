@@ -1,18 +1,21 @@
 package com.devsuperior.dscommerce.entities;
 
 import java.time.Instant;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -34,11 +37,13 @@ public class Order {
 		@ManyToOne
 		@JoinColumn(name = "client_id")
 		private User client;
-		
-		
 
 		@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
 		private Payment payment;
+		
+		@OneToMany(mappedBy = "id.order")
+		private Set<OrderItem> items = new HashSet<>();
+		
 		
 		public Order() {
 			
@@ -90,7 +95,15 @@ public class Order {
 
 		public void setPayment(Payment payment) {
 			this.payment = payment;
+		}
+
+		public Set<OrderItem> getItems() {
+			return items;
 		}	
+		
+		public List<Product> getProduct() {
+			return items.stream().map(x -> x.getProduct()).toList();
+		}
 		
 		
 }
